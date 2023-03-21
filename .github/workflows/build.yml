@@ -20,11 +20,24 @@ on:
         required: true
         type: string
 
-
 jobs:
   build:
     runs-on: ${{ inputs.target_runner }}
     steps:
+      - name: Maximize build space
+        if: ${{ inputs.target_runner == 'ubuntu-latest' }}
+        run: |
+          df -h
+          sudo rm -rf \
+            /usr/share/dotnet \
+            /usr/share/powershell \
+            /usr/share/swift \
+            /usr/local/lib/android \
+            /usr/local/lib/node_modules \
+            /opt/ghc \
+            /opt/az \
+            /opt/hostedtoolcache
+          df -h
       - uses: actions/checkout@v3
       - uses: denoland/setup-deno@9db7f66e8e16b5699a514448ce994936c63f0d54 # v1.1.0
         with:

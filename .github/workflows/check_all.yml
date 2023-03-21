@@ -44,7 +44,7 @@ jobs:
       - name: Dispatch Build
         if: ${{ steps.check_exists.outputs.exists == 'false' }}
         run: >
-          gh workflow run build.yml
+          gh workflow run build.yml --ref $(git rev-parse --abbrev-ref @)
           -f binary_repo=${{ matrix.binary.repo }}
           -f binary_name=${{ matrix.binary.name }}
           -f target_triple=${{ matrix.target.triple }}
