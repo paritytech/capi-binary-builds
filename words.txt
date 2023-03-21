@@ -1,0 +1,10 @@
+aarch
+capi
+deno
+denoland
+dprint
+parachain
+paritytech
+polkadot
+protoc
+rustup
