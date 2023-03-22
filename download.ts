@@ -28,8 +28,10 @@ export async function download(binary: string, version: string): Promise<string>
   if (!response.ok || !response.body) {
     throw new Error(`Could not find binary ${key}`)
   }
-  const file = await Deno.open(binaryPath, { write: true, create: true })
+  const tempFile = await Deno.makeTempFile()
+  const file = await Deno.open(tempFile, { write: true, create: true })
   await response.body.pipeTo(file.writable)
-  await Deno.chmod(binaryPath, 0o777)
+  await Deno.chmod(tempFile, 0o777)
+  await Deno.rename(tempFile, binaryPath)
   return binaryPath
 }
