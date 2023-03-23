@@ -24,10 +24,10 @@ jobs:
           - name: substrate-contracts-node
             repo: paritytech/substrate-contracts-node
             type: release
-          # - name: trappist-collator
-          #   repo: paritytech/trappist
-          #   args: --features with-trappist-runtime
-          #   type: commit
+          - name: trappist-collator
+            repo: paritytech/trappist
+            args: --features with-trappist-runtime
+            type: commit
           - name: stout-collator
             repo: paritytech/trappist
             args: --no-default-features --features with-stout-runtime
