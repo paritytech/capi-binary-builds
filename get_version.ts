@@ -1,12 +1,28 @@
-const [repo] = Deno.args
+const [type, repo] = Deno.args
 
-const release = await fetch(`https://api.github.com/repos/${repo}/releases/latest`)
-  .then((r) => r.json())
+const types: Record<string, () => Promise<string>> = {
+  async release() {
+    const release = await fetch(`https://api.github.com/repos/${repo}/releases/latest`)
+      .then((r) => r.json())
 
-console.log(release)
+    console.log(release)
 
-const version = release.tag_name
+    return release.tag_name
+  },
+  async commit() {
+    const commit = await fetch(`https://api.github.com/repos/${repo}/commits/@`)
+      .then((r) => r.json())
 
-if (!version) throw new Error("no tag_name for latest version")
+    console.log(commit)
+
+    return commit.sha.slice(0, 7)
+  },
+}
+
+if (!(type in types)) throw new Error(`unrecognized type ${type}`)
+
+const version = await types[type]()
+
+if (!version) throw new Error("version fetching failed")
 
 await Deno.writeTextFile(Deno.env.get("GITHUB_OUTPUT")!, `version=${version}`, { append: true })
