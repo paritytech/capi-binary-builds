@@ -12,21 +12,28 @@ jobs:
       fail-fast: false
       matrix:
         binary:
-          - repo: dprint/dprint
-            name: dprint
-          - repo: paritytech/polkadot
-            name: polkadot
-          - repo: paritytech/cumulus
-            name: polkadot-parachain
-          - repo: paritytech/substrate-contracts-node
-            name: substrate-contracts-node
+          # - name: dprint
+          #   repo: dprint/dprint
+          # - name: polkadot
+          #   repo: paritytech/polkadot
+          # - name: polkadot-parachain
+          #   repo: paritytech/cumulus
+          # - name: substrate-contracts-node
+          #   repo: paritytech/substrate-contracts-node
+          - name: trappist-collator
+            repo: paritytech/trappist
+            args: --features with-trappist-runtime
+          - name: stout-collator
+            repo: paritytech/trappist
+            args: --features with-stout-runtime
+            from: trappist-collator
         target:
           - triple: x86_64-unknown-linux-gnu
             runner: ubuntu-latest
-          - triple: aarch64-apple-darwin
-            runner: macos-latest
-          - triple: x86_64-apple-darwin
-            runner: macos-latest
+          # - triple: aarch64-apple-darwin
+          #   runner: macos-latest
+          # - triple: x86_64-apple-darwin
+          #   runner: macos-latest
     steps:
       - uses: actions/checkout@v3
       - uses: denoland/setup-deno@9db7f66e8e16b5699a514448ce994936c63f0d54 # v1.1.0
@@ -47,6 +54,8 @@ jobs:
           gh workflow run build.yml --ref $(git rev-parse --abbrev-ref @)
           -f binary_repo=${{ matrix.binary.repo }}
           -f binary_name=${{ matrix.binary.name }}
+          -f binary_args=${{ matrix.binary.args }}
+          -f binary_from=${{ matrix.binary.from || matrix.binary.name }}
           -f target_triple=${{ matrix.target.triple }}
           -f target_runner=${{ matrix.target.runner }}
           -f version=${{ steps.get_version.outputs.version }}

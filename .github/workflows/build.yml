@@ -4,10 +4,16 @@ run-name: Build ${{ inputs.binary_name }}/${{ inputs.version }}/${{ inputs.targe
 on:
   workflow_dispatch:
     inputs:
+      binary_name:
+        required: true
+        type: string
       binary_repo:
         required: true
         type: string
-      binary_name:
+      binary_args:
+        required: false
+        type: string
+      binary_from:
         required: true
         type: string
       target_triple:
@@ -15,7 +21,10 @@ on:
         type: string
       target_runner:
         required: true
-        type: string
+        type: choice
+        options:
+        - ubuntu-latest
+        - macos-latest
       version:
         required: true
         type: string
@@ -64,12 +73,12 @@ jobs:
           repository: ${{ inputs.binary_repo }}
           ref: ${{ inputs.version }}
           path: repo
-      - run: cargo +nightly build --release --bin ${{ inputs.binary_name }} --locked --target ${{ inputs.target_triple }}
+      - run: cargo +nightly build --release --bin ${{ inputs.binary_from }} --locked --target ${{ inputs.target_triple }} ${{ inputs.binary_args }}
         working-directory: ./repo
       - run: >
           deno run -A upload.ts
           ${{ inputs.binary_name }}/${{ inputs.version }}/${{ inputs.target_triple }}
-          repo/target/${{ inputs.target_triple }}/release/${{ inputs.binary_name }}
+          repo/target/${{ inputs.target_triple }}/release/${{ inputs.binary_from }}
         env:
           S3_ACCESS_KEY: ${{ vars.S3_ACCESS_KEY }}
           S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
