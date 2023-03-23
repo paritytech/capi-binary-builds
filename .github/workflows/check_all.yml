@@ -65,5 +65,6 @@ jobs:
           -f target_triple='${{ matrix.target.triple }}'
           -f target_runner='${{ matrix.target.runner }}'
           -f version='${{ steps.get_version.outputs.version }}'
+          -f ref='${{ steps.get_version.outputs.ref }}'
         env:
           GH_TOKEN: ${{ github.token }}
