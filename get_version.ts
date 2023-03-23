@@ -25,5 +25,11 @@ const [version, ref = version] = await types[type]()
 
 if (!version) throw new Error("version fetching failed")
 
-await Deno.writeTextFile(Deno.env.get("GITHUB_OUTPUT")!, `version=${version}`, { append: true })
-await Deno.writeTextFile(Deno.env.get("GITHUB_OUTPUT")!, `ref=${ref}`, { append: true })
+await Deno.writeTextFile(
+  Deno.env.get("GITHUB_OUTPUT")!,
+  `
+version=${version}
+ref=${ref}
+`.trim(),
+  { append: true },
+)
