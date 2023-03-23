@@ -58,12 +58,12 @@ jobs:
         if: ${{ steps.check_exists.outputs.exists == 'false' }}
         run: >
           gh workflow run build.yml --ref $(git rev-parse --abbrev-ref @)
-          -f binary_repo=${{ matrix.binary.repo }}
-          -f binary_name=${{ matrix.binary.name }}
-          -f binary_args=${{ matrix.binary.args }}
-          -f binary_from=${{ matrix.binary.from || matrix.binary.name }}
-          -f target_triple=${{ matrix.target.triple }}
-          -f target_runner=${{ matrix.target.runner }}
-          -f version=${{ steps.get_version.outputs.version }}
+          -f binary_repo='${{ matrix.binary.repo }}'
+          -f binary_name='${{ matrix.binary.name }}'
+          -f binary_args='${{ matrix.binary.args }}'
+          -f binary_from='${{ matrix.binary.from || matrix.binary.name }}'
+          -f target_triple='${{ matrix.target.triple }}'
+          -f target_runner='${{ matrix.target.runner }}'
+          -f version='${{ steps.get_version.outputs.version }}'
         env:
           GH_TOKEN: ${{ github.token }}
