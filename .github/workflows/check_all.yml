@@ -12,14 +12,27 @@ jobs:
       fail-fast: false
       matrix:
         binary:
-          - repo: dprint/dprint
-            name: dprint
-          - repo: paritytech/polkadot
-            name: polkadot
-          - repo: paritytech/cumulus
-            name: polkadot-parachain
-          - repo: paritytech/substrate-contracts-node
-            name: substrate-contracts-node
+          - name: dprint
+            repo: dprint/dprint
+            type: release
+          - name: polkadot
+            repo: paritytech/polkadot
+            type: release
+          - name: polkadot-parachain
+            repo: paritytech/cumulus
+            type: release
+          - name: substrate-contracts-node
+            repo: paritytech/substrate-contracts-node
+            type: release
+          - name: trappist-collator
+            repo: paritytech/trappist
+            args: --features with-trappist-runtime
+            type: commit
+          - name: stout-collator
+            repo: paritytech/trappist
+            args: --no-default-features --features with-stout-runtime
+            from: trappist-collator
+            type: commit
         target:
           - triple: x86_64-unknown-linux-gnu
             runner: ubuntu-latest
@@ -33,7 +46,7 @@ jobs:
         with:
           deno-version: v1.x
       - id: get_version
-        run: deno run -A get_version.ts ${{ matrix.binary.repo }} 
+        run: deno run -A get_version.ts ${{ matrix.binary.type }} ${{ matrix.binary.repo }} 
       - id: check_exists
         run: deno run -A check_exists.ts ${{ matrix.binary.name }}/${{ steps.get_version.outputs.version }}/${{ matrix.target.triple }}
         env:
@@ -45,10 +58,13 @@ jobs:
         if: ${{ steps.check_exists.outputs.exists == 'false' }}
         run: >
           gh workflow run build.yml --ref $(git rev-parse --abbrev-ref @)
-          -f binary_repo=${{ matrix.binary.repo }}
-          -f binary_name=${{ matrix.binary.name }}
-          -f target_triple=${{ matrix.target.triple }}
-          -f target_runner=${{ matrix.target.runner }}
-          -f version=${{ steps.get_version.outputs.version }}
+          -f binary_repo='${{ matrix.binary.repo }}'
+          -f binary_name='${{ matrix.binary.name }}'
+          -f binary_args='${{ matrix.binary.args }}'
+          -f binary_from='${{ matrix.binary.from || matrix.binary.name }}'
+          -f target_triple='${{ matrix.target.triple }}'
+          -f target_runner='${{ matrix.target.runner }}'
+          -f version='${{ steps.get_version.outputs.version }}'
+          -f ref='${{ steps.get_version.outputs.ref }}'
         env:
           GH_TOKEN: ${{ github.token }}
