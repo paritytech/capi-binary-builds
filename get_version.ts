@@ -15,7 +15,7 @@ const types: Record<string, () => Promise<string>> = {
 
     console.log(commit)
 
-    return commit.sha.slice(0, 7)
+    return commit.sha
   },
 }
 
