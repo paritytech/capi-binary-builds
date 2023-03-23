@@ -84,3 +84,13 @@ jobs:
           S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
           S3_REGION: ${{ vars.S3_REGION }}
           S3_BUCKET: ${{ vars.S3_BUCKET }}
+      - name: Report failure
+        if: ${{ failure() }}
+        run: >
+          gh issue create
+          -a tjjfvi
+          -l failure
+          -t 'failure: ${{ inputs.binary_name }}/${{ inputs.version }}/${{ inputs.target_triple }}'
+          -b "https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+        env:
+          GH_TOKEN: ${{ github.token }}
