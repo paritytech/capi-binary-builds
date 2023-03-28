@@ -23,7 +23,7 @@ on:
         required: true
         type: choice
         options:
-        - ubuntu-latest
+        - ubuntu-20.04
         - macos-latest
       version:
         required: true
@@ -41,7 +41,7 @@ jobs:
     runs-on: ${{ inputs.target_runner }}
     steps:
       - name: Maximize build space
-        if: ${{ inputs.target_runner == 'ubuntu-latest' }}
+        if: ${{ inputs.target_runner == 'ubuntu-20.04' }}
         run: |
           df -h
           sudo rm -rf \
@@ -74,7 +74,7 @@ jobs:
           which protoc
         env:
           PROTOC_VERSION: '3.15.8'
-          PROTOC_OS: ${{ fromJson('{"ubuntu-latest":"linux","macos-latest":"osx"}')[inputs.target_runner] }}
+          PROTOC_OS: ${{ fromJson('{"ubuntu-20.04":"linux","macos-latest":"osx"}')[inputs.target_runner] }}
       - uses: actions/checkout@v3
         with:
           repository: ${{ inputs.binary_repo }}
