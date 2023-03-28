@@ -10,7 +10,7 @@ const capiBinariesDir = path.join(cacheDir, "capi-binaries")
 const capiBinariesApi = `https://capi-binaries.s3.amazonaws.com/`
 
 export async function download(binary: string, version: string): Promise<string> {
-  const binaryPath = path.join(capiBinariesDir, binary, version)
+  const binaryPath = path.join(capiBinariesDir, `capi-${binary}-${version}`)
   await Deno.mkdir(path.dirname(binaryPath), { recursive: true })
   try {
     await Deno.stat(binaryPath)
@@ -28,7 +28,7 @@ export async function download(binary: string, version: string): Promise<string>
   if (!response.ok || !response.body) {
     throw new Error(`Could not find binary ${key}`)
   }
-  const tempFile = await Deno.makeTempFile()
+  const tempFile = await Deno.makeTempFile({ dir: capiBinariesDir, prefix: "tmp-" })
   const file = await Deno.open(tempFile, { write: true, create: true })
   await response.body.pipeTo(file.writable)
   await Deno.chmod(tempFile, 0o777)
