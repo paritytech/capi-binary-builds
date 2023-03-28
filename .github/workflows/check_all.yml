@@ -35,7 +35,7 @@ jobs:
             type: commit
         target:
           - triple: x86_64-unknown-linux-gnu
-            runner: ubuntu-latest
+            runner: ubuntu-20.04
           - triple: aarch64-apple-darwin
             runner: macos-latest
           - triple: x86_64-apple-darwin
