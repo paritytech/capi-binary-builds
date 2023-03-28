@@ -25,6 +25,7 @@ on:
         options:
         - ubuntu-latest
         - macos-latest
+        - ubuntu-20.04
       version:
         required: true
         type: string
