@@ -31,6 +31,10 @@ on:
       ref:
         required: true
         type: string
+      toolchain:
+        required: true
+        type: string
+        default: nightly
 
 jobs:
   build:
@@ -56,7 +60,7 @@ jobs:
           deno-version: v1.x
       - uses: actions-rs/toolchain@v1
         with:
-          toolchain: nightly
+          toolchain: ${{ inputs.toolchain }}
           default: true
           profile: minimal
           target: ${{ inputs.target_triple }}
@@ -76,7 +80,7 @@ jobs:
           repository: ${{ inputs.binary_repo }}
           ref: ${{ inputs.ref }}
           path: repo
-      - run: cargo +nightly build --release --bin ${{ inputs.binary_from }} --locked --target ${{ inputs.target_triple }} ${{ inputs.binary_args }}
+      - run: cargo +${{ inputs.toolchain }} build --release --bin ${{ inputs.binary_from }} --locked --target ${{ inputs.target_triple }} ${{ inputs.binary_args }}
         working-directory: ./repo
       - run: >
           deno run -A upload.ts
