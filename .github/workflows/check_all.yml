@@ -47,6 +47,8 @@ jobs:
           deno-version: v1.x
       - id: get_version
         run: deno run -A get_version.ts ${{ matrix.binary.type }} ${{ matrix.binary.repo }} 
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
       - id: check_exists
         run: deno run -A check_exists.ts ${{ matrix.binary.name }}/${{ steps.get_version.outputs.version }}/${{ matrix.target.triple }}
         env:

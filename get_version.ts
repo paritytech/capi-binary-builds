@@ -1,8 +1,12 @@
 const [type, repo] = Deno.args
 
+const headers = {
+  Authorization: `token ${Deno.env.get("GITHUB_TOKEN")!}`,
+}
+
 const types: Record<string, () => Promise<[string, string?]>> = {
   async release() {
-    const release = await fetch(`https://api.github.com/repos/${repo}/releases/latest`)
+    const release = await fetch(`https://api.github.com/repos/${repo}/releases/latest`, { headers })
       .then((r) => r.json())
 
     console.log(release)
@@ -10,7 +14,7 @@ const types: Record<string, () => Promise<[string, string?]>> = {
     return [release.tag_name]
   },
   async commit() {
-    const commit = await fetch(`https://api.github.com/repos/${repo}/commits/@`)
+    const commit = await fetch(`https://api.github.com/repos/${repo}/commits/@`, { headers })
       .then((r) => r.json())
 
     console.log(commit)
