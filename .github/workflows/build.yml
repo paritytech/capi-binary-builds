@@ -80,7 +80,7 @@ jobs:
           repository: ${{ inputs.binary_repo }}
           ref: ${{ inputs.ref }}
           path: repo
-      - run: cargo +${{ inputs.toolchain }} build --release --bin ${{ inputs.binary_from }} --locked --target ${{ inputs.target_triple }} ${{ inputs.binary_args }}
+      - run: cargo +${{ inputs.toolchain }} build --release --bin ${{ inputs.binary_from }} --target ${{ inputs.target_triple }} ${{ inputs.binary_args }}
         working-directory: ./repo
       - run: >
           deno run -A upload.ts
