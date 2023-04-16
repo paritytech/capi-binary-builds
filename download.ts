@@ -21,7 +21,6 @@ export async function download(binary: string, version: string): Promise<string>
     }
   }
   const key = `${binary}/${version}/${Deno.build.target}`
-  console.error("Downloading", key)
   const response = await fetch(
     new URL(key, capiBinariesApi),
   )
