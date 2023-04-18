@@ -48,6 +48,7 @@ export class CapiBinary {
       if (!response.ok || !response.body) {
         throw new Error(`Could not find binary ${this.key}`)
       }
+      await Deno.mkdir(getBinariesDir(), { recursive: true })
       const tempFile = path.join(getBinariesDir(), `tmp-${crypto.randomUUID()}`)
       const file = await Deno.open(tempFile, { write: true, create: true })
       await response.body.pipeTo(file.writable)
