@@ -1,37 +1,63 @@
 import * as path from "https://deno.land/std@0.180.0/path/mod.ts"
 import getCacheDir from "https://deno.land/x/cache_dir@0.2.0/mod.ts"
 
-const cacheDir = getCacheDir()
-
-if (!cacheDir) throw new Error("Could not auto-detect cache dir")
-
-const capiBinariesDir = path.join(cacheDir, "capi-binaries")
-
 const capiBinariesApi = `https://capi-binaries.s3.amazonaws.com/`
 
-export async function download(binary: string, version: string): Promise<string> {
-  const binaryPath = path.join(capiBinariesDir, `capi-${binary}-${version}`)
-  await Deno.mkdir(path.dirname(binaryPath), { recursive: true })
-  try {
-    await Deno.stat(binaryPath)
-    return binaryPath
-  } catch (e) {
-    if (!(e instanceof Deno.errors.NotFound)) {
-      throw e
-    }
+export function getBinariesDir() {
+  const cacheDir = getCacheDir()
+  if (!cacheDir) throw new Error("Could not auto-detect cache dir")
+  const binariesDir = path.join(cacheDir, "capi-binaries")
+  return binariesDir
+}
+
+const memo = new Map<string, CapiBinary>()
+
+export class CapiBinary {
+  path
+  key
+  constructor(readonly binary: string, readonly version: string) {
+    this.path = path.join(getBinariesDir(), `capi-${binary}-${version}`)
+    this.key = `${this.binary}/${this.version}/${Deno.build.target}`
+    const existing = memo.get(this.key)
+    if (existing) return existing
+    memo.set(this.key, this)
   }
-  const key = `${binary}/${version}/${Deno.build.target}`
-  console.error("Downloading", key)
-  const response = await fetch(
-    new URL(key, capiBinariesApi),
-  )
-  if (!response.ok || !response.body) {
-    throw new Error(`Could not find binary ${key}`)
+
+  #exists?: Promise<boolean>
+  exists(): Promise<boolean> {
+    return this.#downloading?.then(() => true) ?? (this.#exists ??= (async () => {
+      try {
+        await Deno.stat(this.path)
+        return true
+      } catch (e) {
+        if (!(e instanceof Deno.errors.NotFound)) {
+          throw e
+        }
+        return false
+      }
+    })())
   }
-  const tempFile = await Deno.makeTempFile({ dir: capiBinariesDir, prefix: "tmp-" })
-  const file = await Deno.open(tempFile, { write: true, create: true })
-  await response.body.pipeTo(file.writable)
-  await Deno.chmod(tempFile, 0o777)
-  await Deno.rename(tempFile, binaryPath)
-  return binaryPath
+
+  #downloading?: Promise<void>
+  async download() {
+    if (await this.exists()) return
+    return this.#downloading ??= (async () => {
+      const response = await fetch(
+        new URL(this.key, capiBinariesApi),
+      )
+      if (!response.ok || !response.body) {
+        throw new Error(`Could not find binary ${this.key}`)
+      }
+      const tempFile = path.join(getBinariesDir(), `tmp-${crypto.randomUUID()}`)
+      const file = await Deno.open(tempFile, { write: true, create: true })
+      await response.body.pipeTo(file.writable)
+      await Deno.chmod(tempFile, 0o777)
+      await Deno.rename(tempFile, this.path)
+      return
+    })()
+  }
+}
+
+export function binary(binary: string, version: string) {
+  return new CapiBinary(binary, version)
 }
