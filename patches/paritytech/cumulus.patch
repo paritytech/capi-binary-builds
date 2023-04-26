@@ -1,0 +1,65 @@
+diff --git a/parachain-template/runtime/src/lib.rs b/parachain-template/runtime/src/lib.rs
+index 7b5d0b4e2..c2717e933 100644
+--- a/parachain-template/runtime/src/lib.rs
++++ b/parachain-template/runtime/src/lib.rs
+@@ -189,7 +189,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
+ /// up by `pallet_aura` to implement `fn slot_duration()`.
+ ///
+ /// Change this to adjust the block time.
+-pub const MILLISECS_PER_BLOCK: u64 = 12000;
++pub const MILLISECS_PER_BLOCK: u64 = 4000;
+ 
+ // NOTE: Currently it is not possible to change the slot duration after the chain has started.
+ //       Attempting to do so will brick block production.
+diff --git a/parachains/common/src/lib.rs b/parachains/common/src/lib.rs
+index 8ac464ea0..a0e7832da 100644
+--- a/parachains/common/src/lib.rs
++++ b/parachains/common/src/lib.rs
+@@ -76,7 +76,7 @@ mod constants {
+ 	/// slot_duration()`.
+ 	///
+ 	/// Change this to adjust the block time.
+-	pub const MILLISECS_PER_BLOCK: u64 = 12000;
++	pub const MILLISECS_PER_BLOCK: u64 = 4000;
+ 	pub const SLOT_DURATION: u64 = MILLISECS_PER_BLOCK;
+ 
+ 	// Time is measured by number of blocks.
+diff --git a/parachains/runtimes/testing/penpal/src/lib.rs b/parachains/runtimes/testing/penpal/src/lib.rs
+index c6c6987fb..deeb80cd9 100644
+--- a/parachains/runtimes/testing/penpal/src/lib.rs
++++ b/parachains/runtimes/testing/penpal/src/lib.rs
+@@ -206,7 +206,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
+ /// up by `pallet_aura` to implement `fn slot_duration()`.
+ ///
+ /// Change this to adjust the block time.
+-pub const MILLISECS_PER_BLOCK: u64 = 12000;
++pub const MILLISECS_PER_BLOCK: u64 = 4000;
+ 
+ // NOTE: Currently it is not possible to change the slot duration after the chain has started.
+ //       Attempting to do so will brick block production.
+diff --git a/parachains/runtimes/testing/rococo-parachain/src/lib.rs b/parachains/runtimes/testing/rococo-parachain/src/lib.rs
+index 0b6927fa3..e67ac73d7 100644
+--- a/parachains/runtimes/testing/rococo-parachain/src/lib.rs
++++ b/parachains/runtimes/testing/rococo-parachain/src/lib.rs
+@@ -108,7 +108,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
+ 	state_version: 0,
+ };
+ 
+-pub const MILLISECS_PER_BLOCK: u64 = 12000;
++pub const MILLISECS_PER_BLOCK: u64 = 4000;
+ 
+ pub const SLOT_DURATION: u64 = MILLISECS_PER_BLOCK;
+ 
+diff --git a/test/runtime/src/lib.rs b/test/runtime/src/lib.rs
+index 6ee6afd46..3f22ac240 100644
+--- a/test/runtime/src/lib.rs
++++ b/test/runtime/src/lib.rs
+@@ -115,7 +115,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
+ 	state_version: 1,
+ };
+ 
+-pub const MILLISECS_PER_BLOCK: u64 = 12000;
++pub const MILLISECS_PER_BLOCK: u64 = 4000;
+ 
+ pub const SLOT_DURATION: u64 = MILLISECS_PER_BLOCK;
+ 

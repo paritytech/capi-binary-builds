@@ -1,0 +1,65 @@
+diff --git a/runtime/kusama/constants/src/lib.rs b/runtime/kusama/constants/src/lib.rs
+index 73ca3d31652..72456cad409 100644
+--- a/runtime/kusama/constants/src/lib.rs
++++ b/runtime/kusama/constants/src/lib.rs
+@@ -40,7 +40,7 @@ pub mod currency {
+ pub mod time {
+ 	use primitives::{BlockNumber, Moment};
+ 	use runtime_common::prod_or_fast;
+-	pub const MILLISECS_PER_BLOCK: Moment = 6000;
++	pub const MILLISECS_PER_BLOCK: Moment = 2000;
+ 	pub const SLOT_DURATION: Moment = MILLISECS_PER_BLOCK;
+ 	pub const EPOCH_DURATION_IN_SLOTS: BlockNumber = prod_or_fast!(1 * HOURS, 1 * MINUTES);
+ 
+diff --git a/runtime/polkadot/constants/src/lib.rs b/runtime/polkadot/constants/src/lib.rs
+index 68b2fdcd306..d2f0b9ca806 100644
+--- a/runtime/polkadot/constants/src/lib.rs
++++ b/runtime/polkadot/constants/src/lib.rs
+@@ -41,7 +41,7 @@ pub mod currency {
+ pub mod time {
+ 	use primitives::{BlockNumber, Moment};
+ 	use runtime_common::prod_or_fast;
+-	pub const MILLISECS_PER_BLOCK: Moment = 6000;
++	pub const MILLISECS_PER_BLOCK: Moment = 2000;
+ 	pub const SLOT_DURATION: Moment = MILLISECS_PER_BLOCK;
+ 	pub const EPOCH_DURATION_IN_SLOTS: BlockNumber = prod_or_fast!(4 * HOURS, 1 * MINUTES);
+ 
+diff --git a/runtime/rococo/constants/src/lib.rs b/runtime/rococo/constants/src/lib.rs
+index 0683bc377e1..17f3fc8e77b 100644
+--- a/runtime/rococo/constants/src/lib.rs
++++ b/runtime/rococo/constants/src/lib.rs
+@@ -39,7 +39,7 @@ pub mod currency {
+ pub mod time {
+ 	use primitives::{BlockNumber, Moment};
+ 	use runtime_common::prod_or_fast;
+-	pub const MILLISECS_PER_BLOCK: Moment = 6000;
++	pub const MILLISECS_PER_BLOCK: Moment = 2000;
+ 	pub const SLOT_DURATION: Moment = MILLISECS_PER_BLOCK;
+ 	pub const DEFAULT_EPOCH_DURATION: BlockNumber = prod_or_fast!(1 * HOURS, 1 * MINUTES);
+ 	frame_support::parameter_types! {
+diff --git a/runtime/test-runtime/constants/src/lib.rs b/runtime/test-runtime/constants/src/lib.rs
+index ca329accec8..08eabe154f4 100644
+--- a/runtime/test-runtime/constants/src/lib.rs
++++ b/runtime/test-runtime/constants/src/lib.rs
+@@ -32,7 +32,7 @@ pub mod currency {
+ pub mod time {
+ 	use primitives::{BlockNumber, Moment};
+ 	// Testnet
+-	pub const MILLISECS_PER_BLOCK: Moment = 6000;
++	pub const MILLISECS_PER_BLOCK: Moment = 2000;
+ 	pub const SLOT_DURATION: Moment = MILLISECS_PER_BLOCK;
+ 	// 30 seconds for now
+ 	pub const EPOCH_DURATION_IN_SLOTS: BlockNumber = MINUTES / 2;
+diff --git a/runtime/westend/constants/src/lib.rs b/runtime/westend/constants/src/lib.rs
+index e7d1a627713..86ef81367b8 100644
+--- a/runtime/westend/constants/src/lib.rs
++++ b/runtime/westend/constants/src/lib.rs
+@@ -40,7 +40,7 @@ pub mod time {
+ 	use primitives::{BlockNumber, Moment};
+ 	use runtime_common::prod_or_fast;
+ 
+-	pub const MILLISECS_PER_BLOCK: Moment = 6000;
++	pub const MILLISECS_PER_BLOCK: Moment = 2000;
+ 	pub const SLOT_DURATION: Moment = MILLISECS_PER_BLOCK;
+ 	pub const EPOCH_DURATION_IN_SLOTS: BlockNumber = prod_or_fast!(1 * HOURS, 1 * MINUTES);
+ 
