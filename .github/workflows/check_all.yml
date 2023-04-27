@@ -18,9 +18,11 @@ jobs:
           - name: polkadot
             repo: paritytech/polkadot
             type: release
+            patch: true
           - name: polkadot-parachain
             repo: paritytech/cumulus
             type: release
+            patch: true
           - name: substrate-contracts-node
             repo: paritytech/substrate-contracts-node
             type: release
@@ -68,5 +70,28 @@ jobs:
           -f target_runner='${{ matrix.target.runner }}'
           -f version='${{ steps.get_version.outputs.version }}'
           -f ref='${{ steps.get_version.outputs.ref }}'
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - if: ${{ matrix.binary.patch }}
+        id: check_patch_exists
+        run: deno run -A check_exists.ts ${{ matrix.binary.name }}/${{ steps.get_version.outputs.version }}-patched/${{ matrix.target.triple }}
+        env:
+          S3_ACCESS_KEY: ${{ vars.S3_ACCESS_KEY }}
+          S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+          S3_REGION: ${{ vars.S3_REGION }}
+          S3_BUCKET: ${{ vars.S3_BUCKET }}
+      - name: Dispatch Patch Build
+        if: ${{ steps.check_patch_exists.outputs.exists == 'false' }}
+        run: >
+          gh workflow run build.yml --ref $(git rev-parse --abbrev-ref @)
+          -f binary_repo='${{ matrix.binary.repo }}'
+          -f binary_name='${{ matrix.binary.name }}'
+          -f binary_args='${{ matrix.binary.args }}'
+          -f binary_from='${{ matrix.binary.from || matrix.binary.name }}'
+          -f target_triple='${{ matrix.target.triple }}'
+          -f target_runner='${{ matrix.target.runner }}'
+          -f version='${{ steps.get_version.outputs.version }}-patched'
+          -f ref='${{ steps.get_version.outputs.ref }}'
+          -f patch=true
         env:
           GH_TOKEN: ${{ github.token }}
