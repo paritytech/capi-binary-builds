@@ -81,9 +81,9 @@ jobs:
           ref: ${{ inputs.ref }}
           path: repo
       - run: >
-          [[ -f ./patches/${{ inputs.binary_name }}.patch ]] 
-          && cd ./repo 
+          [[ -f ../patches/${{ inputs.binary_name }}.patch ]] 
           && git apply -3 ../patches/${{ inputs.binary_name }}.patch
+        working-directory: ./repo
       - run: cargo +${{ inputs.toolchain }} build --release --bin ${{ inputs.binary_from }} --target ${{ inputs.target_triple }} ${{ inputs.binary_args }}
         working-directory: ./repo
       - run: >
