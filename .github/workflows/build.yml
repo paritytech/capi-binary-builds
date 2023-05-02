@@ -35,10 +35,6 @@ on:
         required: true
         type: string
         default: nightly-2023-01-01
-      patch:
-        required: false
-        type: boolean
-        default: false
 
 jobs:
   build:
@@ -84,10 +80,10 @@ jobs:
           repository: ${{ inputs.binary_repo }}
           ref: ${{ inputs.ref }}
           path: repo
-      - if: ${{ inputs.patch }}
-        run: |
-          [[ ! -f ./patches/${{ inputs.binary_repo }}.patch ]] && exit 1
-          cd ./repo && git apply -3 ../patches/${{ inputs.binary_repo }}.patch
+      - run: >
+          [[ -f ./patches/${{ inputs.binary_name }}.patch ]] 
+          && cd ./repo 
+          && git apply -3 ../patches/${{ inputs.binary_name }}.patch
       - run: cargo +${{ inputs.toolchain }} build --release --bin ${{ inputs.binary_from }} --target ${{ inputs.target_triple }} ${{ inputs.binary_args }}
         working-directory: ./repo
       - run: >
