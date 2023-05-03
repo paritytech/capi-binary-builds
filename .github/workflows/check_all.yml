@@ -21,6 +21,14 @@ jobs:
           - name: polkadot-parachain
             repo: paritytech/cumulus
             type: release
+          - name: polkadot-fast
+            from: polkadot
+            repo: paritytech/polkadot
+            type: release
+          - name: polkadot-parachain-fast
+            from: polkadot-parachain
+            repo: paritytech/cumulus
+            type: release
           - name: substrate-contracts-node
             repo: paritytech/substrate-contracts-node
             type: release
