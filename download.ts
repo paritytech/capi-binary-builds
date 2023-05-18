@@ -1,5 +1,6 @@
 import * as path from "https://deno.land/std@0.180.0/path/mod.ts"
 import getCacheDir from "https://deno.land/x/cache_dir@0.2.0/mod.ts"
+import { streamToFile } from "./streamToFile.ts"
 
 const capiBinariesApi = `https://capi-binaries.s3.amazonaws.com/`
 
@@ -50,8 +51,7 @@ export class CapiBinary {
       }
       await Deno.mkdir(getBinariesDir(), { recursive: true })
       const tempFile = path.join(getBinariesDir(), `tmp-${crypto.randomUUID()}`)
-      const file = await Deno.open(tempFile, { write: true, create: true })
-      await response.body.pipeTo(file.writable)
+      await streamToFile(response.body, tempFile)
       await Deno.chmod(tempFile, 0o777)
       await Deno.rename(tempFile, this.path)
       return
