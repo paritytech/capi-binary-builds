@@ -32,7 +32,7 @@ jobs:
           - name: substrate-contracts-node
             repo: paritytech/substrate-contracts-node
             type: release
-          - name: trappist-collator
+          - name: trappist-node
             repo: paritytech/trappist
             type: release
         target:
