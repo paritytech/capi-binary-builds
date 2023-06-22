@@ -35,6 +35,9 @@ jobs:
           - name: trappist-node
             repo: paritytech/trappist
             type: release
+          - name: substrate
+            repo: paritytech/substrate
+            type: release
         target:
           - triple: x86_64-unknown-linux-gnu
             runner: ubuntu-20.04
@@ -48,7 +51,7 @@ jobs:
         with:
           deno-version: v1.x
       - id: get_version
-        run: deno run -A get_version.ts ${{ matrix.binary.type }} ${{ matrix.binary.repo }} 
+        run: deno run -A get_version.ts ${{ matrix.binary.type }} ${{ matrix.binary.repo }}
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
       - id: check_exists
